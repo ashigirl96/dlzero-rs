@@ -1,5 +1,6 @@
-use dl::chapter1::avg;
+use dl::chapter1::{avg1, avg2};
 
 fn main() {
-    avg();
+    avg1();
+    avg2();
 }
