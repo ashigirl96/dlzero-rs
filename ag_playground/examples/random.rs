@@ -14,6 +14,8 @@ fn main() {
     eprintln!("rng.gen(); = {:#?}", rng.gen::<i32>());
     eprintln!("rng.gen(); = {:#?}", rng.gen::<f32>());
 
+    eprintln!("rng.gen_range(1..10) = {:#?}", rng.gen_range(1..10));
+
     let rng = ArrayRng::<f32>::default();
     eprintln!(
         "rng.random_uniform(&[3, 2, 4], 0.0, 1.0) = {:#?}",

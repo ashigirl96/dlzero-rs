@@ -1,6 +1,5 @@
-use autograd as ag;
-use autograd::array_gen::zeros;
-use autograd::rand;
+use autograd::array_gen::{zeros, ArrayRng};
+use autograd::ndarray::{Array, IxDyn};
 use autograd::rand::prelude::StdRng;
 use autograd::rand::{Rng, SeedableRng};
 
