@@ -4,6 +4,7 @@ use autograd::ndarray::{array, Array};
 use autograd::rand::prelude::{StdRng, ThreadRng};
 use autograd::rand::{Rng, SeedableRng};
 use autograd::{rand, NdArray};
+use rand_distr::Distribution;
 
 pub struct Bandit {
     pub rates: NdArray<f32>,
@@ -19,7 +20,12 @@ impl Bandit {
     }
 
     pub fn step(&mut self, arm: usize) -> f32 {
+        let mut normal = rand_distr::Normal::new(0., 1.).unwrap();
+        let noise = normal.sample(&mut self.unit_rng);
         let rate = self.rates[arm];
+        for rate in &mut self.rates {
+            *rate += 0.1 * noise;
+        }
         if rate > self.unit_rng.gen::<f32>() {
             1.0
         } else {
@@ -31,28 +37,26 @@ impl Bandit {
 pub struct Agent {
     epsilon: f32,
     qs: NdArray<f32>,
-    ns: NdArray<f32>,
     rng: ThreadRng,
     action_size: usize,
+    alpha: f32,
 }
 
 impl Agent {
-    pub fn new(epsilon: f32, action_size: usize) -> Self {
+    pub fn new(epsilon: f32, action_size: usize, alpha: f32) -> Self {
         let qs = zeros(&[action_size]);
-        let ns = zeros(&[action_size]);
         let mut rng = rand::thread_rng();
         Self {
             epsilon,
             qs,
-            ns,
             rng,
             action_size,
+            alpha,
         }
     }
 
     pub fn learn(&mut self, action: usize, reward: f32) {
-        self.ns[action] += 1.0;
-        self.qs[action] += (reward - self.qs[action]) / self.ns[action];
+        self.qs[action] += (reward - self.qs[action]) * self.alpha;
     }
 
     pub fn step(&mut self) -> usize {

@@ -229,6 +229,7 @@ dependencies = [
  "autograd",
  "ndarray 0.15.4",
  "ndarray-stats",
+ "rand_distr",
 ]
 
 [[package]]
